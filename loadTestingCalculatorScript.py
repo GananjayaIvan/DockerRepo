@@ -1,7 +1,14 @@
 from variable import *
+print("Masukkan Path Folder berisi csv result Jmeter yang akan di kalkulasi :")
+path = input()
+print("Input Path Directory result : ")
+path_result = input()
+path_result = path_result+'/Result'
+
 os.chdir(path)
 result = glob.glob('*.{}'.format(extension))
 banyakData = int(len(result))
+os.mkdir(path_result)
 os.chdir(path_result)
 
 file = open("ResultTable.html","w")
@@ -221,7 +228,7 @@ for i in range (0,banyakData):
 
     #PrintOutput
     print('Total Request yang ditemukan : ' + str(banyakRequest))
-    print('Total Request Berhasil : ' + str(totalRequestBerhasil-1))
+    print('Total Request Berhasil : ' + str(totalRequestBerhasil))
     print('Total Request Gagal : ' + str(totalRequestGagal))
     print("Total Hit pada Report : " + str(TotalHit))
     print('Jenis Error yang ditemukan : ' + str(jenisError))
@@ -295,7 +302,9 @@ for i in range (0,banyakData):
     os.chdir(path_result)
     # Serializing json 
     json_object = json.dumps(dictionary, indent = 10, separators=(',', ':'))
+
     
+    os.chdir(path_result)
     #Append to .json file
     filename = "Results.json"
     with open(filename , "a") as outfile:
@@ -306,15 +315,13 @@ for i in range (0,banyakData):
             outfile.write(', \n')
         if i == banyakData-1:
             outfile.write(']')
-    
+
     #Save to csvFiles
     with open('Results.csv', mode='a', newline='') as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow(dictionaryCSV)
 
-
     #Save to HTML
-   
     with open("ResultTable.html","a") as file:
         file.write('<tr>' '<td>'+ str(namaFile) +'</td>' )
         file.write('<td>'+ str(banyakRequest) +'</td>')
@@ -339,10 +346,6 @@ for i in range (0,banyakData):
         file.write('<td>'+ str(ErrorNonHttpCount) +'</td>')
 
     
-file = open("ResultTable.html","a")
-file.write(htmlClose)
-file.close()
-
 file = open("ResultTable.html","a")
 file.write(htmlClose)
 file.close()
